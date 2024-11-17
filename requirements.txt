@@ -1,6 +1,0 @@
-#for interacting with device using adb
-pure-python-adb
-#for math
-numpy
-#for artificial intelligence
-tensorflow
