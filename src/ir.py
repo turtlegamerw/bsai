@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pygetwindow as gw
 from mss import mss
-
+#very cool
 # Find the Scrcpy window
 scrcpy_windows = [win for win in gw.getWindowsWithTitle('RMX1911') if win.visible]
 
