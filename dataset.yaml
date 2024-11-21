@@ -1,0 +1,13 @@
+path: E:/code/py/bsai/dataset  # Root folder of your dataset
+train: images/train
+val: images/val
+# test: images/test  # do later
+
+nc: 6  # Number of classes
+names:
+  0: bullet enemy
+  1: bullet teammate
+  2: cube
+  3: enemy
+  4: player
+  5: teammate

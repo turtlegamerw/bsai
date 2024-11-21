@@ -2,6 +2,8 @@
 /gameplay
 ### dataset ###
 /dataset
+/data
+/runs
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
