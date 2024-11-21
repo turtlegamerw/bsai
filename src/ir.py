@@ -22,7 +22,7 @@ bbox = {
 }
 
 # Load your own YOLO model (replace 'your_model.pt' with the path to your model)
-model = YOLO('src/best.pt')  # Make sure to replace this with the correct path to your model
+model = YOLO('src/last.pt')  # Make sure to replace this with the correct path to your model
 
 # Start capturing frames
 with mss() as sct:
@@ -43,6 +43,7 @@ with mss() as sct:
 
                 if conf > 0.5:  # Threshold for detection
                     # Draw the bounding box and label
+                    print("found 1")
                     cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
                     cv2.putText(frame, f"{model.names[int(cls)]}: {conf:.2f}", 
                                 (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
