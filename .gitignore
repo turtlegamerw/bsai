@@ -4,6 +4,7 @@
 /dataset
 /data
 /runs
+src/runs/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

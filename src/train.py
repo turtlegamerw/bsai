@@ -1,10 +1,12 @@
 from ultralytics import YOLO
 
-# Load a pretrained YOLOv11 model
-model = YOLO("yolo11n.yaml")  # or replace with "yolo11l.yaml" for a larger model
-
-# Train the model
-model.train(data="E://code/py/bsai/dataset.yaml", epochs=50)
-
-results = model.val()
-print(results)
+if __name__ == "__main__":
+    # Load a YOLOv11 model
+    model = YOLO("yolo11n.yaml")
+    
+    # Train the model
+    model.train(data="E://code/py/bsai/dataset.yaml", epochs=50, device=0)
+    
+    # Validate the model
+    results = model.val()
+    print(results)
