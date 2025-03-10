@@ -1,1 +1,0 @@
-scrcpy.exe --print-fps --no-audio
