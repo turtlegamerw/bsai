@@ -1,5 +1,6 @@
-tensorflow>=2.0
+torch==2.6.0
 opencv-python
 numpy
 matplotlib
 scikit-learn
+tqdm

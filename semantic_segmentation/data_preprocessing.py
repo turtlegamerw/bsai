@@ -2,37 +2,38 @@ import cv2
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms
 
-# Function to load images and masks from a directory
-def load_data(image_dir, mask_dir, image_size=(256, 256)):
-    images = []
-    masks = []
-    
-    image_files = sorted(os.listdir(image_dir))
-    mask_files = sorted(os.listdir(mask_dir))
+# Dataset class
+class SegmentationDataset(Dataset):
+    def __init__(self, image_dir, mask_dir, image_size=(256, 256)):
+        self.image_dir = image_dir
+        self.mask_dir = mask_dir
+        self.image_size = image_size
+        self.image_files = sorted(os.listdir(image_dir))
+        self.mask_files = sorted(os.listdir(mask_dir))
+        self.transform = transforms.Compose([
+            transforms.ToTensor(),  # Convert to tensor
+            transforms.Resize(image_size),  # Resize images
+        ])
 
-    for image_file, mask_file in zip(image_files, mask_files):
-        img = cv2.imread(os.path.join(image_dir, image_file))
-        img = cv2.resize(img, image_size)
-        images.append(img)
+    def __len__(self):
+        return len(self.image_files)
 
-        mask = cv2.imread(os.path.join(mask_dir, mask_file), cv2.IMREAD_GRAYSCALE)
-        mask = cv2.resize(mask, image_size)
-        mask = np.expand_dims(mask, axis=-1)  # Add channel dimension
-        masks.append(mask)
-    
-    images = np.array(images) / 255.0  # Normalize to [0, 1]
-    masks = np.array(masks) / 255.0    # Normalize to [0, 1]
-    
-    return images, masks
+    def __getitem__(self, idx):
+        img = cv2.imread(os.path.join(self.image_dir, self.image_files[idx]))
+        img = self.transform(img)
+
+        mask = cv2.imread(os.path.join(self.mask_dir, self.mask_files[idx]), cv2.IMREAD_GRAYSCALE)
+        mask = self.transform(mask)
+        mask = mask.unsqueeze(0)  # Add channel dimension to the mask
+
+        return img, mask
 
 # Example usage
-if __name__ == "__main__":
-    image_dir = 'path/to/images'
-    mask_dir = 'path/to/masks'
-    images, masks = load_data(image_dir, mask_dir)
-    
-    # Split into training and validation sets
-    X_train, X_val, Y_train, Y_val = train_test_split(images, masks, test_size=0.2, random_state=42)
-    
-    print(f"Train size: {X_train.shape}, Validation size: {X_val.shape}")
+def load_data(image_dir, mask_dir, batch_size=4):
+    dataset = SegmentationDataset(image_dir, mask_dir)
+    train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    return train_loader

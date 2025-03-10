@@ -1,24 +1,40 @@
-import tensorflow as tf
+import torch
+import torch.optim as optim
+import torch.nn as nn
+from unet_model import get_model
 from data_preprocessing import load_data
-from unet_model import unet
-from sklearn.model_selection import train_test_split
+from tqdm import tqdm
 
-# Load data
-image_dir = 'path/to/images'
-mask_dir = 'path/to/masks'
-images, masks = load_data(image_dir, mask_dir)
+# Training function
+def train_model(model, train_loader, num_epochs=10, lr=1e-4):
+    criterion = nn.BCEWithLogitsLoss()  # Binary cross-entropy loss
+    optimizer = optim.Adam(model.parameters(), lr=lr)
 
-# Split data into training and validation
-X_train, X_val, Y_train, Y_val = train_test_split(images, masks, test_size=0.2, random_state=42)
+    for epoch in range(num_epochs):
+        model.train()
+        running_loss = 0.0
+        for images, masks in tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs}"):
+            images = images.cuda()
+            masks = masks.cuda()
 
-# Initialize U-Net model
-model = unet(input_size=(256, 256, 3))
+            optimizer.zero_grad()
+            outputs = model(images)
+            loss = criterion(outputs, masks)
+            loss.backward()
+            optimizer.step()
 
-# Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+            running_loss += loss.item()
 
-# Train the model
-model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=10, batch_size=4)
+        print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {running_loss / len(train_loader)}")
 
-# Save the trained model
-model.save('unet_model.h5')
+    torch.save(model.state_dict(), 'unet_model.pth')
+
+# Example usage
+if __name__ == "__main__":
+    image_dir = 'path/to/images'
+    mask_dir = 'path/to/masks'
+
+    train_loader = load_data(image_dir, mask_dir, batch_size=4)
+
+    model = get_model().cuda()  # Move model to GPU if available
+    train_model(model, train_loader)

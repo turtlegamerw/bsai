@@ -1,29 +1,32 @@
-import tensorflow as tf
+import torch
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from unet_model import get_model
 
-# Load the trained model
-model = tf.keras.models.load_model('unet_model.h5')
+# Inference function
+def predict_image(image_path, model):
+    image = cv2.imread(image_path)
+    image_resized = cv2.resize(image, (256, 256)) / 255.0  # Normalize
+    image_input = np.expand_dims(image_resized, axis=0)  # Add batch dimension
+    image_input = torch.tensor(image_input).permute(0, 3, 1, 2).float().cuda()
 
-# Load a new image for inference
-image_path = 'path/to/new_image.png'
-image = cv2.imread(image_path)
-image_resized = cv2.resize(image, (256, 256)) / 255.0  # Normalize
-image_input = np.expand_dims(image_resized, axis=0)  # Add batch dimension
+    model.eval()
+    with torch.no_grad():
+        predicted_mask = model(image_input)
+    
+    predicted_mask = torch.sigmoid(predicted_mask)
+    predicted_mask = (predicted_mask > 0.5).cpu().numpy().astype(np.uint8)  # Convert to binary
 
-# Perform prediction
-predicted_mask = model.predict(image_input)
+    return predicted_mask[0][0]  # Return the mask
 
-# Convert to binary mask (0 or 1)
-predicted_mask = (predicted_mask > 0.5).astype(np.uint8)
+# Example usage
+if __name__ == "__main__":
+    model = get_model().cuda()
+    model.load_state_dict(torch.load('unet_model.pth'))
 
-# Visualize the result
-plt.imshow(predicted_mask[0], cmap='gray')
-plt.show()
+    image_path = 'path/to/new_image.png'
+    predicted_mask = predict_image(image_path, model)
 
-# Optionally, overlay the result on the original image
-result = cv2.addWeighted(image, 0.7, predicted_mask[0] * 255, 0.3, 0)
-cv2.imshow("Segmented Image", result)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    plt.imshow(predicted_mask, cmap='gray')
+    plt.show()
