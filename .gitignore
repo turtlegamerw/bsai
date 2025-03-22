@@ -5,6 +5,7 @@
 /data
 /runs
 src/runs/
+/pth/*
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
