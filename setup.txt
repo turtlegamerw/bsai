@@ -1,2 +1,8 @@
 first: adb start-server
 then interact.py
+
+move 350 825 for walk
+tap 1500 950 for hyper
+move 1660 800 for super
+tap 1850 950 for gadget
+move 1960 700 for attack
