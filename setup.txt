@@ -1,0 +1,2 @@
+first: adb start-server
+then interact.py
