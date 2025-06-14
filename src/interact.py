@@ -1,5 +1,8 @@
-# imports type shit 
+#cool stuff
 from movement import movement
+from hyper import clickhyper
+from gadget import clickgadget
+# imports type shit 
 from ppadb.client import Client as AdbClient
 import time
 import random
@@ -7,17 +10,21 @@ import random
 # Connect to ADB
 client = AdbClient(host="127.0.0.1", port=5037)
 devices = client.devices()
-
 if len(devices) == 0:
     print("No devices connected.")
     exit()
-
 device = devices[0]
 print(f"Connected to {device.serial}")
 
-# Simulate joystick movement
-for x in range(1000):
-    randomnum = random.randint(1, 8)
-    start_x, start_y, end_x, end_y = movement(randomnum)
-    device.shell(f"input swipe {start_x} {start_y} {end_x} {end_y} 3000")
-    
+#clicks hyper
+x_hyper, y_hyper = clickhyper()
+device.shell(f"input tap {x_hyper} {y_hyper} ")
+
+#clicks gadget
+x_gadget, y_gadget = clickgadget()
+device.shell(f"input tap {x_gadget} {y_gadget} ")
+
+#moves in a random direction
+randomnum = random.randint(1, 8)
+start_x, start_y, end_x, end_y = movement(randomnum)
+device.shell(f"input swipe {start_x} {start_y} {end_x} {end_y} 3000")
