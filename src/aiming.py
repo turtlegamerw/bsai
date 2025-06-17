@@ -1,7 +1,7 @@
-# movestick center
-movestick_x, movestick_y = 350, 825
+#aimstick center
+aim_x, aim_y = 1960, 700
 
-# Directions (dx, dy offset) moving
+# Directions (dx, dy offset) aiming
 directions = {
     "up": (0, -200),
     "down": (0, 200),
@@ -13,7 +13,7 @@ directions = {
     "down_right": (150, 150)       
 }
 #temporary because no ai
-def movement(randomnum):
+def aim(randomnum):
     # Map random number to direction name
     direction_keys = [
         "up",          # 1
@@ -25,12 +25,11 @@ def movement(randomnum):
         "up_left",     # 7
         "down_right"   # 8
     ]
-
     if 1 <= randomnum <= len(direction_keys):
         direction = direction_keys[randomnum - 1]
         dx, dy = directions[direction]
-        end_x = movestick_x + dx
-        end_y = movestick_y + dy
-        return movestick_x, movestick_y, end_x, end_y
+        end_x =aim_x + dx
+        end_y =aim_y + dy
+        return aim_x, aim_y, end_x, end_y
     else:
         raise ValueError("Invalid randomnum. Must be between 1 and 8.")

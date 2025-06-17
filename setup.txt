@@ -4,5 +4,5 @@ then py.exe .\interact.py
 move 350 825 for walk DONE
 tap 1500 950 for hyper DONE
 tap 1850 950 for gadget DONE
-move 1660 800 for super
-move 1960 700 for attack
+move 1660 800 for super DONE
+move 1960 700 for attack DONE
