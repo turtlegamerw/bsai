@@ -1,5 +1,6 @@
 ### gameplay ###
 /gameplay
+/brawl_images/*
 
 ### dataset ###
 /dataset

@@ -1,13 +1,14 @@
 #cool stuff
-from super import aimsuper
-from movement import movement
-from hyper import clickhyper
-from gadget import clickgadget
-from aiming import aim
+from input.super import aimsuper
+from input.movement import movement
+from input.hyper import clickhyper
+from input.gadget import clickgadget
+from input.aiming import aim
 # imports type shit 
 from ppadb.client import Client as AdbClient
 import time
 import random
+import cv2 
 
 # Connect to ADB
 client = AdbClient(host="127.0.0.1", port=5037)
