@@ -6,7 +6,7 @@ import win32gui
 from input.gadget import clickgadget
 from ppadb.client import Client as AdbClient
 
-
+#load in model
 model = YOLO('src/ai model/best.pt')
 
 # Connect to ADB
@@ -59,6 +59,8 @@ with mss.mss() as sct:
             #clicks gadget
             x_gadget, y_gadget = clickgadget()
             device.shell(f"input tap {x_gadget} {y_gadget} ")
+
+        
             
 
         annotated_frame = result.plot()
