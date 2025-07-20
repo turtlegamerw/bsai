@@ -7,7 +7,7 @@ from input.gadget import clickgadget
 from ppadb.client import Client as AdbClient
 
 #load in model
-model = YOLO('src/ai model/best.pt')
+model = YOLO('best.pt')
 
 # Connect to ADB
 client = AdbClient(host="127.0.0.1", port=5037)
@@ -55,7 +55,7 @@ with mss.mss() as sct:
         detected_classes = [model.names[int(box.cls.cpu().numpy()[0])] for box in result.boxes]
         detected_classes = list(set(detected_classes))
 
-        if 'gadget_charged' in detected_classes:
+        if 'enemy' in detected_classes:
             #clicks gadget
             x_gadget, y_gadget = clickgadget()
             device.shell(f"input tap {x_gadget} {y_gadget} ")
